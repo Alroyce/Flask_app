@@ -1,12 +1,11 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
-from .models import User
+from .models import User, QuestionnaireResponse
 from werkzeug.security import generate_password_hash, check_password_hash
-from . import db   ##means from __init__.py import db
+from . import db
 from flask_login import login_user, login_required, logout_user, current_user
 
-
 auth = Blueprint('auth', __name__)
-
+questionnaire = Blueprint('questionnaire', __name__)
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
@@ -27,13 +26,11 @@ def login():
 
     return render_template("login.html", user=current_user)
 
-
 @auth.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('auth.login'))
-
 
 @auth.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
@@ -56,7 +53,7 @@ def sign_up():
             flash('Password must be at least 7 characters.', category='error')
         else:
             new_user = User(email=email, first_name=first_name, password=generate_password_hash(
-                password1, method='sha256'))
+                password1, method='pbkdf2:sha256'))
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user, remember=True)
@@ -64,3 +61,24 @@ def sign_up():
             return redirect(url_for('views.home'))
 
     return render_template("sign_up.html", user=current_user)
+
+@questionnaire.route('/questionnaire', methods=['GET', 'POST'])
+@login_required
+def show_questionnaire():
+    form = QuestionnaireForm()
+    if form.validate_on_submit():
+        response = QuestionnaireResponse(
+            user_id=current_user.id,
+            question1=','.join(form.question1.data),
+            question2=','.join(form.question2.data),
+            question3=','.join(form.question3.data)
+            # Add more fields as needed
+        )
+        db.session.add(response)
+        db.session.commit()
+        flash('Thank you for completing the questionnaire!', 'success')
+        return redirect(url_for('views.home'))
+
+    return render_template('questionnaire.html', form=form)
+
+

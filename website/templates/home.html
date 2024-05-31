@@ -1,21 +1,34 @@
-{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
-%}
-<h1 align="center">Notes</h1>
-<ul class="list-group list-group-flush" id="notes">
-  {% for note in user.notes %}
-  <li class="list-group-item">
-    {{ note.data }}
-    <button type="button" class="close" onClick="deleteNote({{ note.id }})">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </li>
-  {% endfor %}
-</ul>
-<form method="POST">
-  <textarea name="note" id="note" class="form-control"></textarea>
-  <br />
-  <div align="center">
-    <button type="submit" class="btn btn-primary">Add Note</button>
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<h1 align="center">Welcome, {{ user.first_name }}!</h1>
+
+<div style="border: 2px solid #ccc; padding: 20px; max-width: 600px; margin: auto;">
+  <p style="font-weight: bold; text-align: center;">Welcome to PhySeek: Your Personalized Fitness Destination!</p>
+
+  <p style="text-align: justify;">
+    At PhySeek, we believe that achieving your fitness goals should be personalized, convenient, and effective. That's why we've created a platform where you can embark on your fitness journey with confidence.
+  </p>
+
+  <p style="text-align: justify;">
+    Whether you're looking to build muscle, lose weight, improve endurance, or simply enhance your overall health, our custom-tailored workouts are designed to fit your unique needs and goals. Say goodbye to generic routines and hello to workouts that evolve with you.
+  </p>
+
+  <p style="text-align: justify;">
+    Track your progress effortlessly with our intuitive tools and charts, allowing you to see your achievements in real-time and stay motivated every step of the way.
+  </p>
+
+  <p style="text-align: justify;">
+    Whether you're a seasoned gym-goer or just starting out, PhySeek is here to support you on your path to a healthier, happier you.
+  </p>
+
+  <p style="font-weight: bold; text-align: center;">So, are you ready to unleash your full potential?</p>
+
+  <p style="text-align: justify;">
+    Let's get started on your journey to a fitter, stronger, and more vibrant you. Welcome to PhySeek! 
+  </p>
+  <div style="text-align: center;">
+      <a href="{{ url_for('views.questionnaire') }}" class="btn">Fill out the Questionnaire</a>
   </div>
-</form>
+</div>
 {% endblock %}
